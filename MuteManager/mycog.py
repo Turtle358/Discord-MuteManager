@@ -7,7 +7,7 @@ class MyCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @commands.command()
-    @commands.checks.has_permissions(moderate_members=True)
+    @commands.has_permissions(moderate_members=True)
     async def mute(ctx, member: discord.Member, time, reason):
         if "h" in time:
             time.replace("h","")
