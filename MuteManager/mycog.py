@@ -7,7 +7,7 @@ class MyCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     @commands.command()
-    async def mute(ctx, member: discord.Member, time, reason, message):
+    async def mute(message, ctx, member: discord.Member, time, reason):
         if not ctx.message.author.server_permissions.administrator:
             await ctx.channel.send("You cannot mute people")
         if ctx.message.author == member.id:
