@@ -3,11 +3,11 @@ import discord
 from redbot.core import commands
 
 class MyCog(commands.Cog):
-    """DiscordMuteManager"""
+    """MuteManager"""
     def __init__(self, bot):
         self.bot = bot
     @commands.command()
-    async def mute(ctx, member: discord.Member, time, reason):
+    async def mute(ctx, member: discord.Member, time, reason, message):
         if not ctx.message.author.server_permissions.administrator:
             await ctx.channel.send("You cannot mute people")
         if ctx.message.author == member.id:
