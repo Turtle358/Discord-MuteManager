@@ -1,27 +1,16 @@
 import datetime
-import discord
+from discord import app_commands
 from redbot.core import commands
 
 class MyCog(commands.Cog):
     """MuteManager"""
     def __init__(self, bot):
         self.bot = bot
-    @commands.command()
-    async def mute(message, ctx, member: discord.Member, time, reason):
-        if not ctx.message.author.server_permissions.administrator:
-            await ctx.channel.send("You cannot mute people")
-        if ctx.message.author == member.id:
-            await ctx.channel.send("You cannot mute youself")
-        if ctx.message.author.server_permissions.administrator or ctx.message.author.id == 560181647006367794:
-            if "h" in time:
-                time.replace("h","")
-                print(time)
-                await member.timeout(until=datetime.timedelta(hours=time), reason=reason)
-                await member.send(f"You have been muted for {time}hours, with the reason: `{reason}`")
-            if "d" in time:
-                time.replace("d","")
-                print(time)
-                await member.timeout(until=datetime.timedelta(hours=time), reason=reason)
-                await member.send(f"You have been mute for {time}days with the reason: `{reason}`")
-            embed = discord.Embed(title=f":white_check_mark: {member.name} has been successfully muted")
-            await ctx.send(embed=embed)
+    @app_commands.command(name='timeout', description='timeouts a user for a specific time')
+    @app_commands.checks.has_permissions(moderate_members=True)
+    async def timeout(self, interaction: Interaction, member: Member, seconds: int = 0, minutes: int = 0,
+                      hours: int = 0, days: int = 0, reason: str = None):
+        duration = datetime.timedelta(seconds=seconds, minutes=minutes, hours=hours, days=days)
+        await member.timeout(duration, reason=reason)
+        await member.send(f"You have been muted for {duration}. \nWith the reason: {reason} ")
+        await interaction.response.send_message(f'{member.mention} was timeouted until for {duration}', ephemeral=True)
